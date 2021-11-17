@@ -37,29 +37,21 @@ func main() {
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
-	threads, err := data.Threads()
-	if err == nil {
+	threads, err := data.Threads(); if err == nil {
 		_, err = session(w, r)
-
-		publicTmplFiles := []string{
-			"templates/layout.html",
-			"templates/public.navbar.html",
-			"templates/index.html",
-		}
-
-		privateTmplFiles := []string{
-			"templates/layout.html",
-			"templates/private.navbar.html",
-			"templates/index.html",
-		}
-
-		var templates *template.Template
 		if err != nil {
-			templates = template.Must(template.ParseFiles(publicTmplFiles...))
+			generateHTML(w, threads, "layout", "public.navbar.html", "templates/index.html")
 		} else {
-			templates = template.Must(template.ParseFiles(privateTmplFiles...))
+			generateHTML(w, threads, "layout", "private.navbar.html", "templates/index.html")
 		}
-
-		_ = templates.ExecuteTemplate(w, "layout", threads)
 	}
+}
+
+func generateHTML(w http.ResponseWriter, data interface{}, fn ...string) {
+	var files []string
+	for _, file := range fn {
+		files = append(files, fmt.Sprintf("templates/%s.html", file))
+	}
+	templates := template.Must(template.ParseFiles(files...))
+	_ = templates.ExecuteTemplate(w, "layout", data)
 }

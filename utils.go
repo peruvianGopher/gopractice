@@ -2,10 +2,11 @@ package main
 
 import (
 	"errors"
+	"gopractice/data"
 	"net/http"
 )
 
-func session(w http.ResponseWriter, r *http.Request) (sess data.Session, err error) {
+func session(r *http.Request) (sess data.Session, err error) {
 	cookie, err := r.Cookie("_cookie")
 	if err == nil {
 		sess = data.Session{Uuid: cookie.Value}

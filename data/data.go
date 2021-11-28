@@ -5,19 +5,38 @@ import (
 	"crypto/sha1"
 	"database/sql"
 	"fmt"
-	"log"
 	_ "github.com/lib/pq"
+	"log"
+)
+
+const (
+	host     = "localhost"
+	port     = 5432
+	user     = "postgres"
+	password = "1234"
+	dbname   = "testdb"
+	sslmode  = "disable"
 )
 
 var Db *sql.DB
 
-func init()  {
+func init() {
+	fmt.Println("CONNECTION INIT")
 	var err error
-	Db, err := sql.Open("postgres", "dbname=testdb sslmode=disable")
-	_ = Db
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
+		host, port, user, password, dbname, sslmode)
+
+	db, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
 		log.Fatal(err)
 	}
+	Db = db
+	err = Db.Ping()
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("CONN SUCCESS")
 	return
 }
 

@@ -1,12 +1,14 @@
 package data
 
-import "time"
+import (
+	"time"
+)
 
 type Thread struct {
-	Id int
-	UUid string
-	Topic string
-	UserId int
+	Id        int
+	UUid      string
+	Topic     string
+	UserId    int
 	CreatedAt time.Time
 }
 
@@ -15,7 +17,7 @@ func (t *Thread) NumReplies() (count int) {
 	if err != nil {
 		return
 	}
-	for rows.Next(){
+	for rows.Next() {
 		if err = rows.Scan(&count); err != nil {
 			return
 		}
@@ -24,7 +26,7 @@ func (t *Thread) NumReplies() (count int) {
 	return
 }
 
-func Threads() (threads []Thread, err error)  {
+func Threads() (threads []Thread, err error) {
 	rows, err := Db.Query("SELECT id, uuid, topic, user_id, created_at FROM threads ORDER BY created_at DESC")
 	if err != nil {
 		return

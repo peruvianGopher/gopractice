@@ -5,14 +5,14 @@ import (
 	"net/http"
 )
 
-func authenticate (w http.ResponseWriter, r *http.Request) {
+func authenticate(w http.ResponseWriter, r *http.Request) {
 	_ = r.ParseForm()
 	user, _ := data.UserByEmail(r.PostFormValue("email"))
 	if user.Password == data.Encrypt(r.PostFormValue("password")) {
 		session, _ := user.CreateSession()
 		cookie := http.Cookie{
-			Name: "_cookie",
-			Value: session.Uuid,
+			Name:     "_cookie",
+			Value:    session.Uuid,
 			HttpOnly: true,
 		}
 		http.SetCookie(w, &cookie)

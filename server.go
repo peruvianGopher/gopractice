@@ -11,8 +11,7 @@ import (
 func main() {
 	fmt.Println("hi dev!")
 	mux := http.NewServeMux()
-	files := http.FileServer(http.Dir("/public"))
-
+	files := http.FileServer(http.Dir("public"))
 	mux.Handle("/static/", http.StripPrefix("/static/", files))
 
 	mux.HandleFunc("/", index)
@@ -38,12 +37,13 @@ func main() {
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
-	threads, err := data.Threads(); if err == nil {
+	threads, err := data.Threads()
+	if err == nil {
 		_, err = session(r)
 		if err != nil {
-			generateHTML(w, threads, "layout", "public.navbar.html", "templates/index.html")
+			generateHTML(w, threads, "layout", "public.navbar", "index")
 		} else {
-			generateHTML(w, threads, "layout", "private.navbar.html", "templates/index.html")
+			generateHTML(w, threads, "layout", "private.navbar", "index")
 		}
 	}
 }

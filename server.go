@@ -45,6 +45,8 @@ func index(w http.ResponseWriter, r *http.Request) {
 		} else {
 			generateHTML(w, threads, "layout", "private.navbar", "index")
 		}
+	} else {
+		fmt.Println(err)
 	}
 }
 
